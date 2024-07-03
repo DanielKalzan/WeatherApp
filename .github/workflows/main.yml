@@ -9,6 +9,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      
+    - name: Super-linter
+      uses: super-linter/super-linter@v6.6.0
 
     - name: Build docker image
       run: |
@@ -17,6 +20,7 @@ jobs:
     - name: Verify Docker image built successfully
       run: |
         docker images | grep weatherapp
+        
     - name: run image
       run: |
           docker run weatherapp
