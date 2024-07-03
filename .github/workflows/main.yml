@@ -17,4 +17,7 @@ jobs:
     - name: Verify Docker image built successfully
       run: |
         docker images | grep weatherapp
+    - name: run image
+      run: |
+          docker run weatherapp
   
