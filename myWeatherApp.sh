@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #read -p 'Please enter a city name: ' city
-
+read -p 'Please enter an API KEY: ' API_KEY
 
 city="lod"
 
@@ -15,7 +15,7 @@ function getUsage() {
  #   exit 1
 #fi
 
-url="https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=${{API_KEY}}"
+url="https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$API_KEY"
 
 response=$(curl -s "$url")
 if [ "$(echo "$response" | jq '.cod')" != 200 ]; then
