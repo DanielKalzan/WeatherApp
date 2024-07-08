@@ -15,7 +15,7 @@ function getUsage() {
  #   exit 1
 #fi
 
-url="https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=fd36da754a23c689e29157cde00b2aa4"
+url="https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=${{API_KEY}}"
 
 response=$(curl -s "$url")
 if [ "$(echo "$response" | jq '.cod')" != 200 ]; then
