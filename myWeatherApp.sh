@@ -9,13 +9,13 @@ function getUsage() {
     echo -e "Usage: $0 city\n"
 }
 
-#city="$1"
-#if [ -z "$city" ]; then
- #   getUsage
- #   exit 1
-#fi
 
-url="https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$1"
+if [[ -z "$API_KEY" ]]; then
+  echo "API_KEY is not set. Exiting."
+  exit 1
+fi
+
+url="https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$API_KEY"
 
 response=$(curl -s "$url")
 if [ "$(echo "$response" | jq '.cod')" != 200 ]; then

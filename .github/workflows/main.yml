@@ -20,5 +20,5 @@ jobs:
         
     - name: run image
       run: |
-          docker run weatherapp
+          docker run weatherapp -e  API_KEY=${{ secrets.API_KEY }}
   

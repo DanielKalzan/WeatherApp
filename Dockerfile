@@ -1,12 +1,11 @@
-FROM debian:latest
+FROM alpine:latest
 
 COPY myWeatherApp.sh /
 
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
     bash \
     curl \
-    jq \
-    && rm -rf /var/lib/apt/lists/*
+    jq
 
 
-CMD ["bash","/myWeatherApp.sh ${{API_KEY}}"]
+CMD ["bash","/myWeatherApp.sh" ]
