@@ -3,21 +3,20 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Build docker image
-      run: |
-        docker build -t weatherapp .
-        
-    - name: Verify Docker image built successfully
-      run: |
-        docker images | grep weatherapp
-        
-    - name: run image
-      run: |
-          docker run -e API_KEY='${{ secrets.OPENWEATHER_API_KEY }}' weatherapp
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build docker image
+        run: |
+          docker build -t weatherapp .
+
+      - name: Verify Docker image built successfully
+        run: |
+          docker images | grep weatherapp
+
+      - name: run image
+        run: |
+          docker run -e API_KEY='${{ secrets.OPENWEATHER_API_KEY }}' $CITY weatherapp
