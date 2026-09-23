@@ -1,50 +1,41 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-#read -p 'Please enter a CITY name: ' CITY
-#read -p 'Please enter an API KEY: ' API_KEY
+# Usage: ./myWeatherApp.sh [CITY] [API_KEY]
+# Env vars API_KEY and CITY are also supported (used by Docker/CI).
 
-function getUsage() {
-    echo -e "Usage: $0 CITY\n"
-}
+# --- Input resolution: positional args override env vars ---
+API_KEY="${2:-$API_KEY}"
+CITY="${1:-$CITY}"
 
-
+# --- Validate required inputs ---
 if [[ -z "$API_KEY" ]]; then
-  echo "API_KEY is not set. Exiting."
+  echo "Error: API_KEY is not set. Pass it as the 2nd argument or set the API_KEY env var."
   exit 1
 fi
-
 
 if [[ -z "$CITY" ]]; then
   echo "CITY is not set. Using default value: 'London'."
   CITY="London"
 fi
 
-url="https://api.openweathermap.org/data/2.5/weather?q=$CITY&units=metric&appid=$API_KEY"
+# --- Fetch weather data ---
+URL="https://api.openweathermap.org/data/2.5/weather?q=${CITY}&units=metric&appid=${API_KEY}"
+RESPONSE=$(curl -s "$URL")
 
-response=$(curl -s "$url")
-if [ "$(echo "$response" | jq '.cod')" != 200 ]; then
-    echo "Error: City '${CITY}' not found or API request failed."
-    exit 1
+# Fix: .cod returns a string "200" in some API versions — strip quotes with -r
+COD=$(echo "$RESPONSE" | jq -r '.cod')
+if [[ "$COD" != "200" ]]; then
+  echo "Error: City '${CITY}' not found or API request failed. (cod: ${COD})"
+  exit 1
 fi
 
+# --- Parse fields from the single response (no extra curl calls) ---
+TEMPERATURE=$(echo "$RESPONSE" | jq -r '.main.temp')
+HUMIDITY=$(echo "$RESPONSE"    | jq -r '.main.humidity')
+WIND_SPEED=$(echo "$RESPONSE"  | jq -r '.wind.speed')
 
-function getTemperature() {
-    curl -s "$url" | jq ".main.temp"
-}
-function getHumidity() {
-    curl -s "$url" | jq ".main.humidity"
-}
-
-function getWindSpeed() {
-    curl -s "$url" | jq ".wind.speed"
-}
-
+# --- Display results ---
 echo "The weather in ${CITY} is:"
-
-temperature=$(getTemperature)
-humidity=$(getHumidity)
-wind_speed=$(getWindSpeed)
-
-echo "  temperature: ${temperature}°C"
-echo "  humidity: ${humidity}%"
-echo "  wind speed: ${wind_speed} m/s"
+echo "  Temperature : ${TEMPERATURE}°C"
+echo "  Humidity    : ${HUMIDITY}%"
+echo "  Wind speed  : ${WIND_SPEED} m/s"
