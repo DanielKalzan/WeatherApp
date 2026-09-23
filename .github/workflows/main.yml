@@ -29,4 +29,4 @@ jobs:
 
       - name: run image
         run: |
-          docker run --rm weatherapp:test --name weatherapp -e CITY=$CITY -e API_KEY=${{ secrets.OPENWEATHER_API_KEY }}  
+          docker run --rm weatherapp:test --name weatherapp -e CITY='$CITY' -e API_KEY='${{ secrets.OPENWEATHER_API_KEY }}'  
