@@ -28,5 +28,8 @@ jobs:
           docker images | grep weatherapp
 
       - name: run image
+        env:
+          CITY: ${{ vars.CITY }}
+          API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
         run: |
-          docker run --rm --name weatherapp -e CITY='$CITY' -e API_KEY='${{ secrets.OPENWEATHER_API_KEY }}' weatherapp:test 
+          docker run --rm --name weatherapp -e CITY -e API_KEY weatherapp:test
