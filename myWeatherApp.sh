@@ -6,7 +6,7 @@
 # --- Input resolution: positional args override env vars ---
 API_KEY="${2:-$API_KEY}"
 CITY="${1:-$CITY}"
-
+x=25
 # --- Validate required inputs ---
 if [[ -z "$API_KEY" ]]; then
   echo "Error: API_KEY is not set. Pass it as the 2nd argument or set the API_KEY env var."
